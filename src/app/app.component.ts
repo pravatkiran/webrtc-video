@@ -8,7 +8,7 @@ import { FormGroup, FormControl } from '@angular/forms';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit{
+export class AppComponent implements AfterViewInit {
   title = 'webrtc-app';
 
   peer: any;
@@ -25,6 +25,10 @@ export class AppComponent implements AfterViewInit{
   });
 
   ngAfterViewInit() {
+    this.peerConfig();
+  }
+
+  peerConfig() {
     let video = this.liveVideo.nativeElement;
     const constraints = {
       video: true,
@@ -40,10 +44,10 @@ export class AppComponent implements AfterViewInit{
 
       this.peer.on('signal', data => {
         console.log(JSON.stringify(data));
-
-         this.chartForms.patchValue({
-           targetPeer: data
-         })
+        // this.targetId = JSON.stringify(data);
+        this.chartForms.patchValue({
+          targetPeer: data
+        })
       });
 
       this.peer.on('data', data => {
@@ -52,9 +56,7 @@ export class AppComponent implements AfterViewInit{
 
       this.peer.on('stream', stream => {
         console.log('stream', stream);
-        // let remoteStream = new  MediaStream();
-        // video = document.createElement('video');
-        video.srcObject  = stream;
+        video.srcObject = stream;
         video.play();
       })
 
@@ -68,7 +70,7 @@ export class AppComponent implements AfterViewInit{
     this.peer.signal(JSON.parse(this.chartForms.controls['targetPeer'].value));
   }
 
-  sendMessage(){
+  sendMessage() {
     this.peer.send(this.chartForms.controls['message'].value);
   }
 
